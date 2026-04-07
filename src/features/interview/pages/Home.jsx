@@ -49,10 +49,10 @@ function Home() {
 
     const isFormValid = () => {
         const resumeFile = resumeInputRef.current?.files?.[0]
-        return jobDescription.trim().length > 0 && 
-               selfDescription.trim().length > 0 && 
-               resumeFile && 
-               !fileError
+        return jobDescription.trim().length > 0 &&
+            selfDescription.trim().length > 0 &&
+            resumeFile &&
+            !fileError
     }
 
     const handleGenrateReport = async () => {
@@ -65,15 +65,25 @@ function Home() {
         }
     }
 
-    const getReportById = (id) => {
-        navigate(`/interview/${id}`)
+    const handleResetForm = () => {
+        setJobDescription('')
+        setSelfDescription('')
+        setUploadedFileName('')
+        setFileError('')
+        if (resumeInputRef.current) {
+            resumeInputRef.current.value = ''
+        }
+    }
+
+    const getReportById = async (id) => {
+        await navigate(`/interview/${id}`);
     }
 
     if (loading) {
         return (
             <main className='loading-screen'>
-                <h1>Generating your personalized <b class="highlight">INTERVIEW PLAN.</b></h1>
-                <div class="loader"></div>
+                <h1>Generating your personalized <b className="highlight">INTERVIEW PLAN.</b></h1>
+                <div className="loader"></div>
             </main>
         )
     }
@@ -156,13 +166,22 @@ function Home() {
                                 <span className='char-counter'>{selfDescription.length} / 1000 chars</span>
                             </div>
 
-                            <button 
-                                className='generate-btn' 
-                                onClick={handleGenrateReport}
-                                disabled={!isFormValid() || loading}
-                            >
-                                {loading ? 'Generating...' : 'Generate My Interview Strategy'}
-                            </button>
+                            <div className='button-group'>
+                                <button
+                                    className='generate-btn'
+                                    onClick={handleGenrateReport}
+                                    disabled={!isFormValid() || loading}
+                                >
+                                    {loading ? 'Generating...' : 'Generate My Interview Strategy'}
+                                </button>
+                                <button
+                                    className='reset-btn'
+                                    onClick={handleResetForm}
+                                    type="button"
+                                >
+                                    Reset Form
+                                </button>
+                            </div>
                         </section>
                     </div>
                 </article>

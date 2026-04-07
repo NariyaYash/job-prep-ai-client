@@ -55,27 +55,29 @@ const RoadMapDay = ({ day }) => (
 
 const Interview = () => {
   const [activeNav, setActiveNav] = useState('technical')
+  const [requestedInterviewId, setRequestedInterviewId] = useState(null)
   const { report, getReportById, loading } = useInterview()
   const { interviewId } = useParams()
   const navigate = useNavigate()
 
   useEffect(() => {
     if (interviewId) {
+      setRequestedInterviewId(interviewId)
       getReportById(interviewId)
     }
   }, [interviewId])
 
   useEffect(() => {
-    if (!loading && !report && interviewId) {
-      navigate("/not-found", { state: { type: "invalid-interview" } });
+    if (requestedInterviewId && !loading && !report) {
+      navigate("/not-found", { state: { type: "invalid-interview" } })
     }
-  }, [loading, report, interviewId, navigate])
+  }, [requestedInterviewId, loading, report, navigate])
 
-  if (loading || !report) {
+  if (loading || !report || String(report._id) !== interviewId) {
     return (
       <main className='loading-screen'>
-        <h1>Generating your personalized <bold class="highlight">INTERVIEW PLAN.</bold></h1>
-        <div class="loader"></div>
+        <h1>Generating your personalized <bold className="highlight">INTERVIEW PLAN.</bold></h1>
+        <div className="loader"></div>
       </main>
     )
   }
