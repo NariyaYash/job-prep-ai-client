@@ -22,7 +22,7 @@ export const genrateInterviewReport = async (jobDescription, resumeFile, selfDes
 
   } catch (error) {
     console.error('Error generating interview report:', error);
-    throw error;
+    return error.response.data;
   }
 }
 

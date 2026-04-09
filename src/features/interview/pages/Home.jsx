@@ -2,6 +2,7 @@ import React, { useRef, useState } from 'react'
 import '../style/home.scss'
 import { useInterview } from '../hooks/useInterview'
 import { useNavigate } from 'react-router';
+import { toast } from 'react-toastify';
 
 function Home() {
     const { loading, genrateReport, reports } = useInterview();
@@ -61,7 +62,12 @@ function Home() {
         const resumeFile = resumeInputRef.current?.files?.[0]
         const report = await genrateReport(jobDescription.trim(), resumeFile, selfDescription.trim())
         if (report?._id) {
+            toast.success("Your interview report has been generated successfully!")
+            handleResetForm()
             navigate(`/interview/${report._id}`)
+        } else {
+            toast.error(report?.message || "An error occurred while generating the interview report. Please try again.")
+            handleResetForm()
         }
     }
 
@@ -164,6 +170,10 @@ function Home() {
                                     onChange={handleSelfDescriptionChange}
                                 />
                                 <span className='char-counter'>{selfDescription.length} / 1000 chars</span>
+                            </div>
+
+                            <div className='form-note'>
+                                <strong>Note:</strong> The more detailed your job description and self-description, the better the AI can tailor your interview strategy!
                             </div>
 
                             <div className='button-group'>
